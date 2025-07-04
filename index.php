@@ -5,7 +5,7 @@
     <title>Formula 1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /*Estilo del contenedor*/
+        /* Misma parte CSS */
         body, html {
             margin: 0;
             padding: 0;
@@ -187,25 +187,17 @@
         }
 
         async function cargarClasificacion() {
-            const years = [2025, 2024]; // Intenta 2025 y luego 2024
-            let pilotos = null;
-
-            for (const year of years) {
-                const url = `https://f1api.dev/api/${year}/drivers-championship`;
-                const data = await fetchData(url);
-                if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
-                    pilotos = data.data;
-                    break;
-                }
-            }
+            const url = 'https://f1api.dev/api/2025/drivers-championship';
+            const data = await fetchData(url);
 
             const lista = document.getElementById('tabla-pilotos');
             lista.innerHTML = ''; // Limpia contenido previo
-            if (pilotos) {
-                pilotos.forEach(piloto => {
-                    const nombre = piloto.driver.name;
+
+            if (data && data.drivers_championship && Array.isArray(data.drivers_championship)) {
+                data.drivers_championship.forEach(piloto => {
+                    const nombre = piloto.driverId; // 👈 Aquí puedes cambiar por piloto.driver.name si la API lo trae
                     const puntos = piloto.points;
-                    const equipo = piloto.team.name;
+                    const equipo = piloto.teamId; // 👈 Aquí puedes cambiar por piloto.team.name si la API lo trae
                     const posicion = piloto.position;
 
                     const item = document.createElement('li');
@@ -218,23 +210,15 @@
         }
 
         async function cargarConstructores() {
-            const years = [2025, 2024]; // Intenta 2025 y luego 2024
-            let equipos = null;
-
-            for (const year of years) {
-                const url = `https://f1api.dev/api/${year}/constructors-championship`;
-                const data = await fetchData(url);
-                if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
-                    equipos = data.data;
-                    break;
-                }
-            }
+            const url = 'https://f1api.dev/api/2025/constructors-championship';
+            const data = await fetchData(url);
 
             const lista = document.getElementById('tabla-constructores');
             lista.innerHTML = ''; // Limpia contenido previo
-            if (equipos) {
-                equipos.forEach(equipo => {
-                    const nombre = equipo.team.name;
+
+            if (data && data.constructors_championship && Array.isArray(data.constructors_championship)) {
+                data.constructors_championship.forEach(equipo => {
+                    const nombre = equipo.teamId; // 👈 Cambia por equipo.team.name si existe
                     const puntos = equipo.points;
                     const posicion = equipo.position;
 
