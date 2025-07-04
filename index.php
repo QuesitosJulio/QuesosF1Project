@@ -171,7 +171,7 @@
     </div>
     <script>
         async function cargarClasificacion() {
-    const url = 'https://f1api.dev/api/2025/drivers-championship';
+    const url = 'https://f1api.dev/api/2024/drivers-championship';
     try {
         const res = await fetch(url);
         const data = await res.json();
@@ -194,7 +194,7 @@
 }
 
 async function cargarConstructores() {
-    const url = 'https://f1api.dev/api/2025/constructors-championship';
+    const url = 'https://f1api.dev/api/2024/constructors-championship';
     try {
         const res = await fetch(url);
         const data = await res.json();
