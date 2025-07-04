@@ -169,57 +169,56 @@
             ?>
         </footer>
     </div>
-<script>
-    async function cargarClasificacion() {
-        const url = 'https://ergast.com/api/f1/current/driverStandings.json';
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            const pilotos = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+    <script>
+        async function cargarClasificacion() {
+            const url = 'https://f1api.dev/api/standings/drivers';
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                const pilotos = data.data;
 
-            const lista = document.getElementById('tabla-pilotos');
-            pilotos.forEach(piloto => {
-                const nombre = `${piloto.Driver.givenName} ${piloto.Driver.familyName}`;
-                const puntos = piloto.points;
-                const equipo = piloto.Constructors[0].name;
-                const posicion = piloto.position;
+                const lista = document.getElementById('tabla-pilotos');
+                pilotos.forEach(piloto => {
+                    const nombre = `${piloto.driver.name}`;
+                    const puntos = piloto.points;
+                    const equipo = piloto.team.name;
+                    const posicion = piloto.position;
 
-                const item = document.createElement('li');
-                item.textContent = `${posicion}. ${nombre} (${equipo}) - ${puntos} pts`;
-                lista.appendChild(item);
-            });
-        } catch (error) {
-            console.error('Error al cargar clasificación de pilotos:', error);
+                    const item = document.createElement('li');
+                    item.textContent = `${posicion}. ${nombre} (${equipo}) - ${puntos} pts`;
+                    lista.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error al cargar clasificación de pilotos:', error);
+            }
         }
-    }
 
-    async function cargarConstructores() {
-        const url = 'https://ergast.com/api/f1/current/constructorStandings.json';
-        try {
-            const res = await fetch(url);
-            const data = await res.json();
-            const equipos = data.MRData.StandingsTable.StandingsLists[0].ConstructorStandings;
+        async function cargarConstructores() {
+            const url = 'https://f1api.dev/api/standings/constructors';
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                const equipos = data.data;
 
-            const lista = document.getElementById('tabla-constructores');
-            equipos.forEach(equipo => {
-                const nombre = equipo.Constructor.name;
-                const puntos = equipo.points;
-                const posicion = equipo.position;
+                const lista = document.getElementById('tabla-constructores');
+                equipos.forEach(equipo => {
+                    const nombre = equipo.team.name;
+                    const puntos = equipo.points;
+                    const posicion = equipo.position;
 
-                const item = document.createElement('li');
-                item.textContent = `${posicion}. ${nombre} - ${puntos} pts`;
-                lista.appendChild(item);
-            });
-        } catch (error) {
-            console.error('Error al cargar clasificación de constructores:', error);
+                    const item = document.createElement('li');
+                    item.textContent = `${posicion}. ${nombre} - ${puntos} pts`;
+                    lista.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error al cargar clasificación de constructores:', error);
+            }
         }
-    }
 
-    // Ejecutar las funciones cuando el DOM esté listo
-    document.addEventListener("DOMContentLoaded", function () {
-        cargarClasificacion();
-        cargarConstructores();
-    });
-</script>
+        document.addEventListener("DOMContentLoaded", function () {
+            cargarClasificacion();
+            cargarConstructores();
+        });
+    </script>
 </body>
 </html>
