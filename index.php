@@ -36,7 +36,7 @@
         header img {
             height: 100px;
             position: absolute;          
-            left: 20px;                  
+            left: 14px;                  
         }
 
         header h1 {
