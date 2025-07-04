@@ -5,7 +5,6 @@
     <title>Formula 1</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Misma parte CSS */
         body, html {
             margin: 0;
             padding: 0;
@@ -178,7 +177,7 @@
                     throw new Error(`Error HTTP ${res.status}`);
                 }
                 const data = await res.json();
-                console.log("Respuesta de la API:", data); // 👈 Debug: imprime respuesta completa
+                console.log("Respuesta de la API:", data); 
                 return data;
             } catch (error) {
                 console.error('Error al obtener datos de la API:', error);
@@ -191,13 +190,13 @@
             const data = await fetchData(url);
 
             const lista = document.getElementById('tabla-pilotos');
-            lista.innerHTML = ''; // Limpia contenido previo
+            lista.innerHTML = ''; 
 
             if (data && data.drivers_championship && Array.isArray(data.drivers_championship)) {
                 data.drivers_championship.forEach(piloto => {
-                    const nombre = piloto.driverId; // 👈 Aquí puedes cambiar por piloto.driver.name si la API lo trae
+                    const nombre = piloto.driverId; 
                     const puntos = piloto.points;
-                    const equipo = piloto.teamId; // 👈 Aquí puedes cambiar por piloto.team.name si la API lo trae
+                    const equipo = piloto.teamId; 
                     const posicion = piloto.position;
 
                     const item = document.createElement('li');
@@ -214,11 +213,11 @@
             const data = await fetchData(url);
 
             const lista = document.getElementById('tabla-constructores');
-            lista.innerHTML = ''; // Limpia contenido previo
+            lista.innerHTML = ''; 
 
             if (data && data.constructors_championship && Array.isArray(data.constructors_championship)) {
                 data.constructors_championship.forEach(equipo => {
-                    const nombre = equipo.teamId; // 👈 Cambia por equipo.team.name si existe
+                    const nombre = equipo.teamId; 
                     const puntos = equipo.points;
                     const posicion = equipo.position;
 
