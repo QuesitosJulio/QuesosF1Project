@@ -68,7 +68,7 @@
 
         .btn {
             display: inline-block;
-            background-color: #FF0000; /* color rojo típico de YouTube */
+            background-color: #FF0000;
             color: white;
             padding: 12px 25px;
             font-size: 16px;
@@ -80,12 +80,12 @@
         }
 
         .btn:hover {
-            background-color: #cc0000; /* rojo más oscuro al pasar el mouse */
+            background-color: #cc0000;
             box-shadow: 0 6px 12px rgba(0,0,0,0.3);
         }
 
         .btn:active {
-            background-color: #990000; /* rojo aún más oscuro al hacer click */
+            background-color: #990000;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
@@ -98,12 +98,12 @@
         }
 
         .recomendacion-video {
-            background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semitransparente */
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 20px 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Sombra suave */
-            backdrop-filter: blur(4px); /* Difumina ligeramente el fondo detrás */
-            -webkit-backdrop-filter: blur(4px); /* Compatibilidad con Safari */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             text-align: center;
             max-width: 400px;
             margin: 20px auto;
@@ -124,16 +124,17 @@
             margin-bottom: 15px;
         }
 
-        #tabla-pilotos {
+        #tabla-pilotos,
+        #tabla-constructores {
             list-style: none;
             padding: 0;
         }
 
-        #tabla-pilotos li {
+        #tabla-pilotos li,
+        #tabla-constructores li {
             padding: 8px 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-          
     </style>
 </head>
 <body>
@@ -144,9 +145,8 @@
             <h1>Formula 1</h1>
         </header>
 
-        <!--enlace a un video-->
+        <!--Contenido principal-->
         <main>
-
             <section class="estadisticas">
                 <h2>Clasificación de Pilotos - Temporada Actual</h2>
                 <ul id="tabla-pilotos"></ul>
@@ -162,58 +162,90 @@
             </div>
         </main>
 
-        <!--Footer con información-->
+        <!--Footer-->
         <footer>
             <?php
                 echo "Curso: Conceptualización de servicios en la nube | Nombre: Julio Gonzalez | Código: 219549399 | Correo: julio.gonzalez5493@alumnos.udg.mx";
             ?>
         </footer>
     </div>
+
     <script>
+        async function fetchData(url) {
+            try {
+                const res = await fetch(url);
+                if (!res.ok) {
+                    throw new Error(`Error HTTP ${res.status}`);
+                }
+                const data = await res.json();
+                console.log("Respuesta de la API:", data); // 👈 Debug: imprime respuesta completa
+                return data;
+            } catch (error) {
+                console.error('Error al obtener datos de la API:', error);
+                return null;
+            }
+        }
+
         async function cargarClasificacion() {
-    const url = 'https://f1api.dev/api/2024/drivers-championship';
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const pilotos = data.data;
+            const years = [2025, 2024]; // Intenta 2025 y luego 2024
+            let pilotos = null;
 
-        const lista = document.getElementById('tabla-pilotos');
-        pilotos.forEach(piloto => {
-            const nombre = piloto.driver.name;
-            const puntos = piloto.points;
-            const equipo = piloto.team.name;
-            const posicion = piloto.position;
+            for (const year of years) {
+                const url = `https://f1api.dev/api/${year}/drivers-championship`;
+                const data = await fetchData(url);
+                if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    pilotos = data.data;
+                    break;
+                }
+            }
 
-            const item = document.createElement('li');
-            item.textContent = `${posicion}. ${nombre} (${equipo}) - ${puntos} pts`;
-            lista.appendChild(item);
-        });
-    } catch (error) {
-        console.error('Error al cargar clasificación de pilotos:', error);
-    }
-}
+            const lista = document.getElementById('tabla-pilotos');
+            lista.innerHTML = ''; // Limpia contenido previo
+            if (pilotos) {
+                pilotos.forEach(piloto => {
+                    const nombre = piloto.driver.name;
+                    const puntos = piloto.points;
+                    const equipo = piloto.team.name;
+                    const posicion = piloto.position;
 
-async function cargarConstructores() {
-    const url = 'https://f1api.dev/api/2024/constructors-championship';
-    try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const equipos = data.data;
+                    const item = document.createElement('li');
+                    item.textContent = `${posicion}. ${nombre} (${equipo}) - ${puntos} pts`;
+                    lista.appendChild(item);
+                });
+            } else {
+                lista.innerHTML = '<li>No se encontraron datos de pilotos.</li>';
+            }
+        }
 
-        const lista = document.getElementById('tabla-constructores');
-        equipos.forEach(equipo => {
-            const nombre = equipo.team.name;
-            const puntos = equipo.points;
-            const posicion = equipo.position;
+        async function cargarConstructores() {
+            const years = [2025, 2024]; // Intenta 2025 y luego 2024
+            let equipos = null;
 
-            const item = document.createElement('li');
-            item.textContent = `${posicion}. ${nombre} - ${puntos} pts`;
-            lista.appendChild(item);
-        });
-    } catch (error) {
-        console.error('Error al cargar clasificación de constructores:', error);
-    }
-}
+            for (const year of years) {
+                const url = `https://f1api.dev/api/${year}/constructors-championship`;
+                const data = await fetchData(url);
+                if (data && data.data && Array.isArray(data.data) && data.data.length > 0) {
+                    equipos = data.data;
+                    break;
+                }
+            }
+
+            const lista = document.getElementById('tabla-constructores');
+            lista.innerHTML = ''; // Limpia contenido previo
+            if (equipos) {
+                equipos.forEach(equipo => {
+                    const nombre = equipo.team.name;
+                    const puntos = equipo.points;
+                    const posicion = equipo.position;
+
+                    const item = document.createElement('li');
+                    item.textContent = `${posicion}. ${nombre} - ${puntos} pts`;
+                    lista.appendChild(item);
+                });
+            } else {
+                lista.innerHTML = '<li>No se encontraron datos de constructores.</li>';
+            }
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             cargarClasificacion();
