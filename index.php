@@ -171,49 +171,49 @@
     </div>
     <script>
         async function cargarClasificacion() {
-            const url = 'https://f1api.dev/api/standings/drivers';
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                const pilotos = data.data;
+    const url = 'https://f1api.dev/api/current/drivers-championship';
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const pilotos = data.data;
 
-                const lista = document.getElementById('tabla-pilotos');
-                pilotos.forEach(piloto => {
-                    const nombre = `${piloto.driver.name}`;
-                    const puntos = piloto.points;
-                    const equipo = piloto.team.name;
-                    const posicion = piloto.position;
+        const lista = document.getElementById('tabla-pilotos');
+        pilotos.forEach(piloto => {
+            const nombre = piloto.driver.name;
+            const puntos = piloto.points;
+            const equipo = piloto.team.name;
+            const posicion = piloto.position;
 
-                    const item = document.createElement('li');
-                    item.textContent = `${posicion}. ${nombre} (${equipo}) - ${puntos} pts`;
-                    lista.appendChild(item);
-                });
-            } catch (error) {
-                console.error('Error al cargar clasificación de pilotos:', error);
-            }
-        }
+            const item = document.createElement('li');
+            item.textContent = `${posicion}. ${nombre} (${equipo}) - ${puntos} pts`;
+            lista.appendChild(item);
+        });
+    } catch (error) {
+        console.error('Error al cargar clasificación de pilotos:', error);
+    }
+}
 
-        async function cargarConstructores() {
-            const url = 'https://f1api.dev/api/standings/constructors';
-            try {
-                const res = await fetch(url);
-                const data = await res.json();
-                const equipos = data.data;
+async function cargarConstructores() {
+    const url = 'https://f1api.dev/api/current/constructors-championship';
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const equipos = data.data;
 
-                const lista = document.getElementById('tabla-constructores');
-                equipos.forEach(equipo => {
-                    const nombre = equipo.team.name;
-                    const puntos = equipo.points;
-                    const posicion = equipo.position;
+        const lista = document.getElementById('tabla-constructores');
+        equipos.forEach(equipo => {
+            const nombre = equipo.team.name;
+            const puntos = equipo.points;
+            const posicion = equipo.position;
 
-                    const item = document.createElement('li');
-                    item.textContent = `${posicion}. ${nombre} - ${puntos} pts`;
-                    lista.appendChild(item);
-                });
-            } catch (error) {
-                console.error('Error al cargar clasificación de constructores:', error);
-            }
-        }
+            const item = document.createElement('li');
+            item.textContent = `${posicion}. ${nombre} - ${puntos} pts`;
+            lista.appendChild(item);
+        });
+    } catch (error) {
+        console.error('Error al cargar clasificación de constructores:', error);
+    }
+}
 
         document.addEventListener("DOMContentLoaded", function () {
             cargarClasificacion();
